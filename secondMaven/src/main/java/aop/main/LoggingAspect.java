@@ -2,6 +2,8 @@ package aop.main;
 
 
 import org.aspectj.lang.JoinPoint;
+import org.aspectj.lang.annotation.AfterReturning;
+import org.aspectj.lang.annotation.AfterThrowing;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
@@ -45,24 +47,32 @@ public class LoggingAspect {
 	@Pointcut("within(aop.model.Circle)")
 	public void allCircleMethods() {}
 	*/
-	
-	@Before("allCircleMethods()")
-	public void loggingAdvice(JoinPoint joinPoint) {
-		String methodName = joinPoint.toLongString();
-		if(methodName.contains("getDia")) {
-		System.out.println("writing log for getdia method b4 its executed");
-		}
-		else 
-			if(methodName.contains("setName")) {
-				System.out.println("writing log for setName method b4 its executed");
-
-				
-			}
+	@AfterReturning("allGetters()")
+	public void adviceAfterCircleMethodsComplete() {
+		System.out.println("after a circle method returns");
 	}
+	
+	
+	@AfterThrowing("args(name)")
+	public void adviceAfterExceptionThrown(String name) { //send an email to the developer if an exception is thrown
+		System.out.println("advice after exception is thrown"+name);
+	}
+	
 
 	@Pointcut("execution(* aop..*.get*())")
 	public void allGetters() {}
-	
+
 	@Pointcut("within(aop.model.Circle)")
 	public void allCircleMethods() {}
+
+	//@Before("args(name)")
+	/*
+	 * @Before("methodsStringArgs(name)") public void stringArgsAdvice(String name)
+	 * { System.out.
+	 * println("advice for all methods which accept a string as an argument "+name);
+	 * }
+	 */
+
+	@Pointcut("args(name)")
+	public void methodsStringArgs(String name) {}
 }
